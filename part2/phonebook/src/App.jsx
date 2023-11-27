@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import doThings from './sources/persons'
-import { Filter, Shown, PersonForm } from './components/book'
+import { Filter, Shown, PersonForm, Notifications } from './components/book'
 
 const App = () => {
 
@@ -8,6 +8,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filtered, setFiltered] = useState('')
+  const [message, setMessage] = useState([])
 
   useEffect(() => {
     doThings
@@ -28,6 +29,10 @@ const App = () => {
           setPersons(persons.map(person => person.id !== findedID ? person:response))
         })
         .catch(error => {
+          setMessage([`Information of ${newName} has already been removed from server`,1])
+          setTimeout(() => {
+            setMessage([null,null])
+          }, 5000)
           console.log('The error is', error)
         })
 
@@ -43,6 +48,10 @@ const App = () => {
         .add(nameAdded)
         .then( response => {
           setPersons(persons.concat(response))
+          setMessage(['Number Successfully Added',0])
+          setTimeout(() => {
+            setMessage([null,null])
+          }, 5000)
           setNewName('')
           setNewNumber('')
         })
@@ -67,6 +76,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notifications message={message}/>
       <Filter filter={filtered} handleFilter={handleInputChange(setFiltered)}/>
       <h3>add a new</h3>
       <PersonForm

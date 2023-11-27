@@ -43,3 +43,35 @@ export const PersonForm = ({handleAddPerson, handleNameChange, handleNumberChang
     </div>
   </form>
 )
+
+export const Notifications = ({message}) => {
+
+  const selectStyle = [
+    {
+      color: 'green',
+      background: 'lightgrey',
+      fontSize: 20,
+      border: "5px solid green",
+      borderRadius:11,
+      padding: 10,
+      marginBottom: 10
+    },
+    {
+      color: 'red',
+      background: 'lightgrey',
+      fontSize: 20,
+      border: "5px solid red",
+      borderRadius:11,
+      padding: 10,
+      marginBottom: 10
+    }
+  ]
+
+  if (message[0] === null) return null
+
+  return (
+    <div style={selectStyle[message[1]]}>
+      {message[0]}
+    </div>
+  )
+}
