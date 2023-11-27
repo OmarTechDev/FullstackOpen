@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import doThings from './sources/persons'
 import axios from 'axios'
 
 const Filter = ({filter,handleFilter}) =>
@@ -16,7 +17,7 @@ const Shown = ({persons, filter}) => {
       return (
         <li key={person.id}>
           {person.name}&nbsp;
-          {person.number}
+          {person.number}&nbsp;<button >delete</button>
         </li>
       )
     })}
@@ -55,28 +56,34 @@ const App = () => {
   const [filtered, setFiltered] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    doThings
+      .getAll()
       .then(response => {
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
 
   const handleAddPerson = (event) => {
     event.preventDefault()
 
-    if (persons.some(person => person.name === newName)){
+    if (persons.some(person => person.name === newName)) {
       window.confirm(`${newName} is already added to phonebook`)
     }
-    else{
+    else {
       const nameAdded = {
         name: newName,
         number: newNumber,
-        id: persons.length
+        id: persons.length+1
       }
-      setPersons(persons.concat(nameAdded))
-      setNewName('')
-      setNewNumber('')
+
+      doThings
+        .add(nameAdded)
+        .then( response => {
+          setPersons(persons.concat(response))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error=> console.log('this is the error', error))
     }
   }
 
